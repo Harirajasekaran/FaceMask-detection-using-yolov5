@@ -1,0 +1,42 @@
+import os
+import shutil
+import  random
+
+
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+
+
+train_path="/content/drive/MyDrive/face /face_data/train/images"
+val_path="/content/drive/MyDrive/face /face_data/val/images"
+test_path="/content/drive/MyDrive/face /face_data/test"
+
+!git clone https://github.com/ultralytics/yolov5
+
+
+
+
+
+%cd yolov5/
+
+!pip install -r requirements.txt
+
+!wget https://github.com/ultralytics/yolov5/blob/master/models/yolov5s.yaml
+
+!python train.py --img 640 --batch 16 --epochs 50 --data "/content/drive/MyDrive/face /dataSet.yaml" --weights "/content/yolov5/yolov5s.pt" --nosave --cache
+
+
+
+!python detect.py --weights "/content/yolov5/runs/train/exp/weights/last.pt" --img 640 --conf 0.25 --source "/content/drive/MyDrive/face /face_data/test"
+
+#display images
+import glob
+from IPython.display import Image, display
+for imagename in glob.glob("/content/yolov5/runs/detect/exp2/*.jpg"):
+  display(Image(filename=imagename))
+  print("/n")
+
+from google.colab import files
+files.download("/content/yolov5")
